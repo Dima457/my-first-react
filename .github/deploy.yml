@@ -1,0 +1,30 @@
+name: Делаем сайт и выкладываем в интернет # Имя нашего садовника
+
+on: # Когда он должен работать?
+  push: # Когда ты "толкаешь" (push) новые листочки
+    branches: [ main ] # ...на главный ствол (main)
+
+jobs: # Что именно он делает?
+  build-and-deploy: # 1. Собрать и выложить
+    runs-on: ubuntu-latest # Он будет работать на виртуальной Linux-машинке
+
+    steps: # Шаги, которые он выполняет:
+    - name: Посмотреть на дерево # Шаг 1. Посмотреть на твой код
+      uses: actions/checkout@v4 # Команда "посмотреть"
+
+    - name: Поставить Node.js # Шаг 2. Взять нужные инструменты
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Полить дерево (установить зависимости) # Шаг 3. Установить библиотеки
+      run: npm install
+
+    - name: Вырастить цветок (собрать сайт) # Шаг 4. Собрать сайт
+      run: npm run build
+
+    - name: Посадить цветок на витрину (выложить на GitHub Pages) # Шаг 5. Выложить
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./dist # Готовый сайт лежит тут
